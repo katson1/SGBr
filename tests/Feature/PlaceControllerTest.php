@@ -17,6 +17,7 @@ class PlaceControllerTest extends TestCase
         $response = $this->getJson(route('places.index'));
         $response->assertStatus(200);
         $response->assertJsonCount(5);
+        $response->assertHeader('Content-Type', 'application/json');
     }
 
     public function test_store_route_creates_place()
@@ -30,6 +31,7 @@ class PlaceControllerTest extends TestCase
 
         $response = $this->postJson(route('places.store'), $data);
         $response->assertStatus(201);
+        $response->assertHeader('Content-Type', 'application/json');
 
         $this->assertDatabaseHas('places', $data);
     }
@@ -47,6 +49,7 @@ class PlaceControllerTest extends TestCase
             'city' => $place->city,
             'state' => $place->state,
         ]);
+        $response->assertHeader('Content-Type', 'application/json');
     }
 
     public function test_update_route_modifies_place()
@@ -61,6 +64,7 @@ class PlaceControllerTest extends TestCase
 
         $response = $this->putJson(route('places.update', $place->id), $data);
         $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'application/json');
 
         $this->assertDatabaseHas('places', [
             'id' => $place->id,
@@ -86,6 +90,7 @@ class PlaceControllerTest extends TestCase
 
         $response = $this->putJson(route('places.update', $place->id), $data);
         $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'application/json');
 
         $this->assertDatabaseHas('places', [
             'id' => $place->id,
@@ -106,4 +111,28 @@ class PlaceControllerTest extends TestCase
         $this->assertDatabaseMissing('places', ['id' => $place->id]);
     }
 
+    public function test_store_route_creates_place_and_checks_count()
+    {
+        $initialCount = Place::count();
+
+        $data = [
+            'name' => 'New Place',
+            'slug' => 'new-place',
+            'city' => 'New City',
+            'state' => 'New State',
+        ];
+
+        $response = $this->postJson(route('places.store'), $data);
+        $response->assertHeader('Content-Type', 'application/json');
+        $this->assertEquals($initialCount + 1, Place::count());
+    }
+
+    public function test_destroy_route_deletes_place_and_checks_count()
+    {
+        $place = Place::factory()->create();
+        $initialCount = Place::count();
+
+        $response = $this->deleteJson(route('places.destroy', $place->id));
+        $this->assertEquals($initialCount - 1, Place::count());
+    }
 }
