@@ -160,7 +160,7 @@ class PlaceControllerTest extends TestCase
         $place = Place::factory()->create();
 
         $data = [
-            'city' => 'New City',
+            'city' => 'Campina Grande',
         ];
 
         $response = $this->putJson(route('places.update', $place->id), $data);
@@ -168,7 +168,7 @@ class PlaceControllerTest extends TestCase
 
         $this->assertDatabaseHas('places', [
             'id' => $place->id,
-            'city' => 'New City',
+            'city' => 'Campina Grande',
         ]);
     }
 
