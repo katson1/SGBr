@@ -95,4 +95,89 @@ class PlaceControllerTest extends TestCase
 
         $this->assertDatabaseMissing('places', ['id' => $place->id]);
     }
+
+    public function test_index_returns_empty_when_no_places_exist()
+    {
+        $response = $this->getJson(route('places.index'));
+        $response->assertStatus(200);
+        $response->assertJsonCount(0);
+    }
+
+    public function test_store_fails_with_missing_name()
+    {
+        $data = [
+            'slug' => 'cpv',
+            'city' => 'Campina Grande',
+            'state' => 'Paraiba',
+        ];
+
+        $response = $this->postJson(route('places.store'), $data);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['name']);
+    }
+
+    public function test_store_fails_with_long_name()
+    {
+        $data = [
+            'name' => str_repeat('a', 256),
+            'slug' => 'cpv',
+            'city' => 'Campina Grande',
+            'state' => 'Paraiba',
+        ];
+
+        $response = $this->postJson(route('places.store'), $data);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['name']);
+    }
+
+    public function test_show_fails_with_invalid_id()
+    {
+        $response = $this->getJson(route('places.show', 99999));
+        $response->assertStatus(404);
+    }
+
+    public function test_update_fails_with_invalid_data()
+    {
+        $place = Place::factory()->create();
+
+        $data = [
+            'name' => '',
+        ];
+
+        $response = $this->putJson(route('places.update', $place->id), $data);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['name']);
+    }
+
+    public function test_destroy_fails_with_invalid_id()
+    {
+        $response = $this->deleteJson(route('places.destroy', 99999));
+        $response->assertStatus(404);
+    }
+
+    public function test_update_handles_partial_data_update()
+    {
+        $place = Place::factory()->create();
+
+        $data = [
+            'city' => 'Campina Grande',
+        ];
+
+        $response = $this->putJson(route('places.update', $place->id), $data);
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('places', [
+            'id' => $place->id,
+            'city' => 'Campina Grande',
+        ]);
+    }
+
+    public function test_destroy_does_not_delete_when_place_does_not_exist()
+    {
+        $place = Place::factory()->create();
+        $place->delete();
+
+        $response = $this->deleteJson(route('places.destroy', $place->id));
+        $response->assertStatus(404);
+    }
 }
