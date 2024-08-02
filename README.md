@@ -30,6 +30,7 @@ To set up and start the project using Docker, run the following commands.
 ```bash
 cp .env.example .env
 php artisan key:generate
+docker-compose up --build -d
 docker-compose exec app php artisan key:generate
 docker-compose exec app php artisan migrate
 ```
