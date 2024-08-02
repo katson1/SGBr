@@ -1,66 +1,84 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Simple Places CRUD
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A simple CRUD application for managing places, built with Laravel 10, PHP 8.2, and Docker.
 
-## About Laravel
+## Prerequisites
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Ensure your development environment meets the following requirements before starting:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- [PHP](https://www.php.net/downloads.php) >= 8.2
+- [Composer](https://getcomposer.org/)
+- [Docker](https://www.docker.com/get-started/)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Installation and Configuration
 
-## Learning Laravel
+### Clone the Repository
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Clone the project from GitHub:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+git clone https://github.com/katson1/SGBr.git
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Install Dependencies
 
-## Laravel Sponsors
+Navigate to the project directory and install the necessary dependencies using Composer:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+cd SGBr
+composer install
+```
 
-### Premium Partners
+### Configuration with Docker
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+To set up and start the project using Docker, follow these steps:
 
-## Contributing
+1. Copy the example environment file and generate the application key:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-## Code of Conduct
+2. Build and start the Docker containers:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+   ```bash
+   docker-compose up --build -d
+   ```
+    > Note: This initial setup may take some time as it involves downloading Docker images.
+   
 
-## Security Vulnerabilities
+3. Generate the application key and run migrations inside the Docker container:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+   ```bash
+   docker-compose exec app php artisan key:generate
+   docker-compose exec app php artisan migrate
+   ```
 
-## License
+## Running Tests
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+To execute the automated tests, use the following command:
+
+```bash
+docker-compose exec app php artisan test
+```
+
+## Author
+
+<div align="left">
+  <div>
+    Katson Matheus
+    <a href="https://github.com/katson1">
+      <img src="https://skillicons.dev/icons?i=github" alt="GitHub" height="15" />
+    </a>
+    <a href="https://discordapp.com/users/210789016675549184">
+      <img src="https://skillicons.dev/icons?i=discord" alt="Discord" height="15"/>
+    </a>
+    <a href="https://www.linkedin.com/in/katsonmatheus/">
+      <img src="https://skillicons.dev/icons?i=linkedin" alt="LinkedIn" height="15"/>
+    </a>
+    <a href="mailto:katson.alves@ccc.ufcg.edu.br">
+      <img src="https://skillicons.dev/icons?i=gmail" alt="Email" height="15"/>
+    </a>
+  </div>
+</div>
