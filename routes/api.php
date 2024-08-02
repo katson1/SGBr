@@ -9,8 +9,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('places', [PlaceController::class, 'index']);
-Route::post('places', [PlaceController::class, 'store']);
-Route::get('places/{id}', [PlaceController::class, 'show']);
-Route::put('places/{id}', [PlaceController::class, 'update']);
-Route::delete('places/{id}', [PlaceController::class, 'destroy']);
+// Places CRUD
+Route::prefix('places')->group(function () {
+    Route::get('/', [PlaceController::class, 'index'])->name('places.index');
+    Route::post('/', [PlaceController::class, 'store'])->name('places.store');
+    Route::get('{id}', [PlaceController::class, 'show'])->name('places.show');
+    Route::put('{id}', [PlaceController::class, 'update'])->name('places.update');
+    Route::delete('{id}', [PlaceController::class, 'destroy'])->name('places.destroy');
+});
