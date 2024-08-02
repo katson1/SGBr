@@ -135,4 +135,96 @@ class PlaceControllerTest extends TestCase
         $response = $this->deleteJson(route('places.destroy', $place->id));
         $this->assertEquals($initialCount - 1, Place::count());
     }
+
+    public function test_index_route_returns_empty_when_no_places_exist()
+    {
+        $response = $this->getJson(route('places.index'));
+        $response->assertStatus(200);
+        $response->assertJsonCount(0);
+        $response->assertHeader('Content-Type', 'application/json');
+    }
+
+    public function test_store_route_fails_with_missing_fields()
+    {
+        $data = [
+            'name' => 'Incomplete Place',
+        ];
+
+        $response = $this->postJson(route('places.store'), $data);
+        $response->assertStatus(422); // 422 Unprocessable Entity
+        $response->assertJsonValidationErrors(['slug', 'city', 'state']);
+        $response->assertHeader('Content-Type', 'application/json');
+    }
+
+    public function test_store_route_fails_with_long_name()
+    {
+        $data = [
+            'name' => str_repeat('a', 256),
+            'slug' => 'long-name',
+            'city' => 'City',
+            'state' => 'State',
+        ];
+
+        $response = $this->postJson(route('places.store'), $data);
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['name']);
+        $response->assertHeader('Content-Type', 'application/json');
+    }
+
+    public function test_show_route_fails_with_invalid_id()
+    {
+        $response = $this->getJson(route('places.show', 99999));
+        $response->assertStatus(404); // 404 Not Found
+        $response->assertHeader('Content-Type', 'application/json');
+    }
+
+    public function test_update_route_fails_with_invalid_data()
+    {
+        $place = Place::factory()->create();
+
+        $data = [
+            'name' => '',
+        ];
+
+        $response = $this->putJson(route('places.update', $place->id), $data);
+        $response->assertStatus(422); // 422 Unprocessable Entity
+        $response->assertJsonValidationErrors(['name']);
+        $response->assertHeader('Content-Type', 'application/json');
+    }
+
+    public function test_destroy_route_fails_with_invalid_id()
+    {
+        $response = $this->deleteJson(route('places.destroy', 99999));
+        $response->assertStatus(404); // 404 Not Found
+        $response->assertHeader('Content-Type', 'application/json');
+    }
+
+    public function test_update_route_partially_updates_place()
+    {
+        $place = Place::factory()->create([
+            'name' => 'Old Place',
+            'city' => 'Old City',
+        ]);
+
+        $data = [
+            'city' => 'Updated City',
+        ];
+
+        $response = $this->putJson(route('places.update', $place->id), $data);
+        $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'application/json');
+
+        $this->assertDatabaseHas('places', [
+            'id' => $place->id,
+            'name' => 'Old Place',
+            'city' => 'Updated City',
+        ]);
+    }
+
+    public function test_destroy_route_does_not_delete_non_existing_place()
+    {
+        $response = $this->deleteJson(route('places.destroy', 99999));
+        $response->assertStatus(404);
+        $response->assertHeader('Content-Type', 'application/json');
+    }
 }
