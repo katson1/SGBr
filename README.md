@@ -1,6 +1,6 @@
 # Simple Places CRUD
 
-A simple CRUD application for managing places, built with Laravel 10, PHP 8.2, and Docker.
+A simple CRUD application for managing places, built with Laravel 10, PHP 8.2, and Docker. *(criado para um teste)*
 
 ## Prerequisites
 
@@ -73,9 +73,6 @@ docker-compose exec app php artisan test
     </a>
     <a href="https://discordapp.com/users/210789016675549184">
       <img src="https://skillicons.dev/icons?i=discord" alt="Discord" height="15"/>
-    </a>
-    <a href="https://www.linkedin.com/in/katsonmatheus/">
-      <img src="https://skillicons.dev/icons?i=linkedin" alt="LinkedIn" height="15"/>
     </a>
     <a href="mailto:katson.alves@ccc.ufcg.edu.br">
       <img src="https://skillicons.dev/icons?i=gmail" alt="Email" height="15"/>
